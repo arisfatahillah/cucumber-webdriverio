@@ -68,6 +68,12 @@ export const config: Options.Testrunner = {
         maxInstances: 5,
         //
         browserName: 'chrome',
+
+        // to setup user agent 
+        //'goog:chromeOptions': {
+            //mobileEmulation: { deviceName: 'Pixel 2' },
+            //args: ['--user-agent=regression-chrome-driver']
+        //},
         acceptInsecureCerts: true
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.

@@ -1,4 +1,5 @@
 import {Given, When, Then} from '@cucumber/cucumber'
+import registerPage from '../pageobjects/register.page';
 
 Given(/^I am on practice page \"([^\"]*)\"$/, async function (appurl:string) {
     await browser.url(appurl)
@@ -6,55 +7,53 @@ Given(/^I am on practice page \"([^\"]*)\"$/, async function (appurl:string) {
 });
 
 Then(/^I validate page header \"([^\"]*)\"$/, async function (headername:string) {
-    const header = await $('//h1')
-    expect(await header).toHaveText(headername)
+    await expect(registerPage.header).toHaveText(headername)
 });
 
-When(/^I enter firstname (.+) and lastname (.+)$/, async function (fname:string, lname:string) {
-    const fname_input = $('[name=firstname]')
-    const lname_input = $('[name=lastname]')
-
-    await (await fname_input).setValue(fname)
-    await (await lname_input).setValue(lname)
+When(/^I input first name \"([^\"]*)\" and lastname \"([^\"]*)\"$/,  async function (fname:string, lname:string) {
+    await (await registerPage.fname).setValue(fname)
+    await (await registerPage.lname).setValue(lname)
+});
+  
+When(/^I input email \"([^\"]*)\"$/,  async function (email:string) {
+    await (await registerPage.email_input).setValue(email)
 });
 
-When(/^I select gender (.+) years experience (.+) and profession (.+)$/, async function (gender, yrs, profession) {
-    const gender_radio = await $$('name=sex')
-    const experience_radio = await $$('name=exp')
-    const profession_cb = await $$('input[name=profession]')
-
-    for (let i = 0; i < gender_radio.length; i++) {
-        const element = await (gender_radio[i]).getAttribute('value');
-        if (element === gender) {
-            await(gender_radio[i]).click()
-            break;
-        }
-    }
-
-    for (let i = 0; i < experience_radio.length; i++) {
-        const element = await (experience_radio[i]).getAttribute('value');
-        if (element === gender) {
-            await(experience_radio[i]).click()
-            break;
-        }
-    }
-
-    for (let i = 0; i < profession_cb.length; i++) {
-        const element = await (profession_cb[i]).getAttribute('value');
-        if (element === gender) {
-            await(profession_cb[i]).click()
-            break;
-        }
-    }
-
-
+When(/^I select gender \"([^\"]*)\"$/,  async function (gender:string) {
+    registerPage.selectElement(gender)
 });
 
-When(/^I select continent (.+) and commands (.+)$/, async function (continent, command) {
-    const gender_radio = await $$('name=sex')
-    const experience_radio = await $$('name=exp')
+When(/^I input mobile phone number \"([^\"]*)\"$/,  async function (phone:string) {
+    await (await registerPage.phone_input).setValue(phone)
 });
 
-When(/^I click on submit button$/, function (callback) {
+When(/^I input date of birth \"([^\"]*)\"$/,  async function (dob:string) {
+    const value = await registerPage.date_of_birth.getValue()
+    console.log(value)
     
+    for (let i = 0; i < value.length-1; i++) {
+        await (await registerPage.date_of_birth).setValue("\uE003")
+        await browser.pause(100)
+    }
+
+    await (await registerPage.date_of_birth).setValue(dob)
+    browser.keys("\uE007"); 
+});
+
+When(/^I input subject \"([^\"]*)\"$/,  async function (subject_name:string) {
+    await (await registerPage.subject_input).setValue(subject_name)
+    browser.keys("\uE007"); 
+});
+
+When(/^I select hobbies \"([^\"]*)\"$/,  async function (hobbies:string) {
+    registerPage.selectElement(hobbies)
+});
+
+When(/^I upload picture from directory \"([^\"]*)\"$/,  async function (filedir:string) {
+    registerPage.uploadImage(filedir)
+});
+
+When(/^I input address \"([^\"]*)\"$/,  async function (address:string) {
+    await (await registerPage.address_input).setValue(address)
+    await browser.pause(1000)
 });
